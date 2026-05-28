@@ -40,14 +40,26 @@ def ajouter_depense():
 
 def voir_solde():
     global solde
-    print(f"Votre solde est : {solde}")
+    print(f"Votre solde est : {solde:.0f} Fcfa ")
+
+def voir_income():
+    global income
+    if not income:
+        print("Aucun revenu enregistré.")
+        return
+    print("\n--- Historique des revenus ---")
+    for x in income:
+        print(f"{x['date']} | +{x['montant']:.0f} Fcfa | {x['source']} ")
+
 
 while True:
     print("\nMenu\n")
     print("1. Ajouter Income")
     print("2. Ajouter Depense")
     print("3. Voir solde")
-    print("4. Quitter")
+    print("4. voir income")
+    print("5. Quitter")
+
 
     choice = input("Choix ?: ")
     if choice == '1':
@@ -57,6 +69,9 @@ while True:
     elif choice == '3':
         voir_solde()
     elif choice == '4':
+        voir_income()
+    elif choice == '5':
         break
+
     else:
         print("Tchai")
