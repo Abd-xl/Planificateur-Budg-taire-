@@ -1,56 +1,63 @@
 from datetime import datetime
 
-income = []
-depense = []
-solde = 0
-
-def ajouter_entres():
-    global income, solde
-    print("Ajout Income")
+def saisir_montant(message):
     while True:
         try:
-            montant = float(input("Montant : "))
-            break
+            return float(input("Montant : "))
         except ValueError:
             print("Tchai")
+
+def ajouter_entres(income_, solde_):
+
+    print("Ajout Income")
+    montant = saisir_montant("Montant ?: ")
+
     entres = {
         "montant" : montant,
         "source" : input("Une Source ?: "),
         "date" : datetime.now().strftime("%d/%m/%Y"),
     }
-    income.append(entres)
-    solde += entres["montant"]
 
-def ajouter_depense():
-    global depense, solde
+    income_.append(entres)
+    solde_ += entres["montant"]
+    return income_, solde_
+
+def ajouter_depense(depense_,solde_ ):
+
     print("Ajout de dépense")
-    while True:
-        try:
-            montant = float(input("Montant : "))
-            break
-        except ValueError:
-            print("Tchai")
+    montant = saisir_montant("Montant ?: ")
+
     sorties = {
         "montant" : montant,
         "motif" : input("Un motif?: "),
         "date" : datetime.now().strftime("%d/%m/%Y"),
     }
-    depense.append(sorties)
-    solde -= sorties["montant"]
+    depense_.append(sorties)
+    solde_ -= sorties["montant"]
+    return depense_, solde_
 
-def voir_solde():
-    global solde
-    print(f"Votre solde est : {solde:.0f} Fcfa ")
+def voir_solde(solde_):
+    print(f"Votre solde est : {solde_:.0f} Fcfa ")
 
-def voir_income():
-    global income
-    if not income:
+def voir_income(income_):
+    if not income_:
         print("Aucun revenu enregistré.")
         return
     print("\n--- Historique des revenus ---")
-    for x in income:
+    for x in income_:
         print(f"{x['date']} | +{x['montant']:.0f} Fcfa | {x['source']} ")
 
+def voir_depense(depense_):
+    if not depense_:
+        print("Aucune depense enregistré.")
+        return
+    print("\n--- Historique des depenses ---")
+    for x in depense_:
+        print(f"{x['date']} | -{x['montant']:.0f} Fcfa | {x['motif']} ")
+
+income = []
+depense = []
+solde = 0
 
 while True:
     print("\nMenu\n")
@@ -58,20 +65,22 @@ while True:
     print("2. Ajouter Depense")
     print("3. Voir solde")
     print("4. voir income")
-    print("5. Quitter")
+    print("5. Voir depense")
+    print("6. Quitter")
 
 
     choice = input("Choix ?: ")
     if choice == '1':
-        ajouter_entres()
+        income, solde = ajouter_entres(income, solde)
     elif choice == '2':
-        ajouter_depense()
+        depense, solde = ajouter_depense(depense, solde)
     elif choice == '3':
-        voir_solde()
+        voir_solde(solde)
     elif choice == '4':
-        voir_income()
+        voir_income(income)
     elif choice == '5':
+        voir_depense(depense)
+    elif choice == '6':
         break
-
     else:
         print("Tchai")
