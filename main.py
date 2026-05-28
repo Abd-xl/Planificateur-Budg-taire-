@@ -3,7 +3,7 @@ from datetime import datetime
 def saisir_montant(message):
     while True:
         try:
-            return float(input("Montant : "))
+            return float(input(message))
         except ValueError:
             print("Tchai")
 
