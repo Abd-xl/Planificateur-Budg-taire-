@@ -1,5 +1,17 @@
 from datetime import datetime
 
+def valider_saisie_texte(message):
+    while True:
+
+        source = input(message).strip()
+        if not source:
+            return None
+
+        if not source.isalnum():
+            print("Pas de caractère speciaux pls")
+        else:
+            return source
+
 def saisir_montant(message):
     while True:
         try:
@@ -11,10 +23,11 @@ def ajouter_entres(income_, solde_):
 
     print("Ajout Income")
     montant = saisir_montant("Montant ?: ")
+    source = valider_saisie_texte("Une Source ?: ")
 
     entres = {
         "montant" : montant,
-        "source" : input("Une Source ?: "),
+        "source" : source,
         "date" : datetime.now().strftime("%d/%m/%Y"),
     }
 
@@ -26,10 +39,11 @@ def ajouter_depense(depense_,solde_ ):
 
     print("Ajout de dépense")
     montant = saisir_montant("Montant ?: ")
+    motif = valider_saisie_texte("Un motif ?: ")
 
     sorties = {
         "montant" : montant,
-        "motif" : input("Un motif?: "),
+        "motif" : motif,
         "date" : datetime.now().strftime("%d/%m/%Y"),
     }
     depense_.append(sorties)
@@ -69,7 +83,7 @@ while True:
     print("6. Quitter")
 
 
-    choice = input("Choix ?: ")
+    choice = input("\nChoix ?: ")
     if choice == '1':
         income, solde = ajouter_entres(income, solde)
     elif choice == '2':
