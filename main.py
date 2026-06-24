@@ -1,100 +1,76 @@
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, flash
+from gestion import BudgetManager
 
-def valider_saisie_texte(message):
-    while True:
+app = Flask(__name__)
+app.secret_key = 'cle_secrete'
 
-        source = input(message).strip()
-        if not source:
-            return None
-
-        if not source.isalnum():
-            print("Pas de caractère speciaux pls")
-        else:
-            return source
-
-def saisir_montant(message):
-    while True:
-        try:
-            return float(input(message))
-        except ValueError:
-            print("Tchai")
-
-def ajouter_entres(income_, solde_):
-
-    print("Ajout Income")
-    montant = saisir_montant("Montant ?: ")
-    source = valider_saisie_texte("Une Source ?: ")
-
-    entres = {
-        "montant" : montant,
-        "source" : source,
-        "date" : datetime.now().strftime("%d/%m/%Y"),
-    }
-
-    income_.append(entres)
-    solde_ += entres["montant"]
-    return income_, solde_
-
-def ajouter_depense(depense_,solde_ ):
-
-    print("Ajout de dépense")
-    montant = saisir_montant("Montant ?: ")
-    motif = valider_saisie_texte("Un motif ?: ")
-
-    sorties = {
-        "montant" : montant,
-        "motif" : motif,
-        "date" : datetime.now().strftime("%d/%m/%Y"),
-    }
-    depense_.append(sorties)
-    solde_ -= sorties["montant"]
-    return depense_, solde_
-
-def voir_solde(solde_):
-    print(f"Votre solde est : {solde_:.0f} Fcfa ")
-
-def voir_income(income_):
-    if not income_:
-        print("Aucun revenu enregistré.")
-        return
-    print("\n--- Historique des revenus ---")
-    for x in income_:
-        print(f"{x['date']} | +{x['montant']:.0f} Fcfa | {x['source']} ")
-
-def voir_depense(depense_):
-    if not depense_:
-        print("Aucune depense enregistré.")
-        return
-    print("\n--- Historique des depenses ---")
-    for x in depense_:
-        print(f"{x['date']} | -{x['montant']:.0f} Fcfa | {x['motif']} ")
-
-income = []
-depense = []
-solde = 0
-
-while True:
-    print("\nMenu\n")
-    print("1. Ajouter Income")
-    print("2. Ajouter Depense")
-    print("3. Voir solde")
-    print("4. voir income")
-    print("5. Voir depense")
-    print("6. Quitter")
+budget_manager = BudgetManager('budget_data.json')
 
 
-    choice = input("\nChoix ?: ")
-    if choice == '1':
-        income, solde = ajouter_entres(income, solde)
-    elif choice == '2':
-        depense, solde = ajouter_depense(depense, solde)
-    elif choice == '3':
-        voir_solde(solde)
-    elif choice == '4':
-        voir_income(income)
-    elif choice == '5':
-        voir_depense(depense)
-    elif choice == '6':
-        break
+@app.route('/')
+def index():
+    data = budget_manager.load_data()
+    stats = budget_manager.get_statistiques()
+
+    return render_template('index.html',
+                         solde=data['solde'],
+                         income_list=data['income'],
+                         depense_list=data['depense'],
+                         stats=stats)
+
+
+@app.route('/ajouter_income', methods=['POST'])
+def ajouter_income():
+
+    montant = request.form.get('montant')
+    source = request.form.get('source')
+
+    success, message = budget_manager.ajouter_income(montant, source)
+
+    if success:
+        flash(message, 'success')
     else:
-        print("Tchai")
+        flash(message, 'error')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/ajouter_depense', methods=['POST'])
+def ajouter_depense():
+
+    montant = request.form.get('montant')
+    motif = request.form.get('motif')
+
+    success, message = budget_manager.ajouter_depense(montant, motif)
+
+    if success:
+        flash(message, 'success')
+    else:
+        flash(message, 'error')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/supprimer/<type_transaction>/<int:index>', methods=['POST'])
+def supprimer_transaction(type_transaction, index):
+
+    success, message = budget_manager.supprimer_transaction(type_transaction, index)
+
+    if success:
+        flash(message, 'success')
+    else:
+        flash(message, 'error')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/reset', methods=['POST'])
+def reset():
+
+    success, message = budget_manager.reset_data()
+    flash(message, 'info')
+    return redirect(url_for('index'))
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0')

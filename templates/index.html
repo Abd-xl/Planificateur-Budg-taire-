@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Planificateur Budgétaire</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <header>
+        <h1>Budget</h1>
+    </header>
+
+    <!-- Messages Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Affichage du Solde et Statistiques -->
+    <div class="solde-card">
+        <h2>Solde Actuel</h2>
+        <p class="solde {% if solde >= 0 %}positive{% else %}negative{% endif %}">
+            {{ solde|round(0)|int }} Fcfa
+        </p>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Revenus:</span>
+                <span class="stat-value income">{{ stats.total_income|round(0)|int }} Fcfa</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Dépenses:</span>
+                <span class="stat-value depense">{{ stats.total_depense|round(0)|int }} Fcfa</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Transactions:</span>
+                <span class="stat-value">{{ stats.nombre_revenus + stats.nombre_depenses }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaires d'ajout -->
+    <div class="forms-container">
+        <div class="form-card">
+            <h3>Ajouter un Revenu</h3>
+            <form method="POST" action="{{ url_for('ajouter_income') }}">
+                <input type="number" name="montant" placeholder="Montant" step="0.01" required>
+                <input type="text" name="source" placeholder="Source (ex: Salaire)" required>
+                <button type="submit" class="btn-income">Ajouter</button>
+            </form>
+        </div>
+
+        <div class="form-card">
+            <h3>Ajouter une Dépense</h3>
+            <form method="POST" action="{{ url_for('ajouter_depense') }}">
+                <input type="number" name="montant" placeholder="Montant" step="0.01" required>
+                <input type="text" name="motif" placeholder="Motif (ex: Courses)" required>
+                <button type="submit" class="btn-depense">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Historiques -->
+    <div class="historiques-container">
+        <div class="historique-card">
+            <h3>Revenus</h3>
+            {% if income_list %}
+                <ul class="historique-list">
+                    {% for item in income_list|reverse %}
+                        <li class="income-item">
+                            <div class="transaction-info">
+                                <span class="date">{{ item.date }}</span>
+                                <span class="montant income">+{{ item.montant|round(0)|int }} Fcfa</span>
+                                <span class="label">{{ item.source }}</span>
+                            </div>
+                            <form method="POST" action="{{ url_for('supprimer_transaction', type_transaction='income', index=loop.revindex0) }}" class="delete-form">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Supprimer ce revenu ?')">×</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty">Aucun revenu enregistré.</p>
+            {% endif %}
+        </div>
+
+        <div class="historique-card">
+            <h3>Dépenses</h3>
+            {% if depense_list %}
+                <ul class="historique-list">
+                    {% for item in depense_list|reverse %}
+                        <li class="depense-item">
+                            <div class="transaction-info">
+                                <span class="date">{{ item.date }}</span>
+                                <span class="montant depense">-{{ item.montant|round(0)|int }} Fcfa</span>
+                                <span class="label">{{ item.motif }}</span>
+                            </div>
+                            <form method="POST" action="{{ url_for('supprimer_transaction', type_transaction='depense', index=loop.revindex0) }}" class="delete-form">
+                                <button type="submit" class="btn-delete" onclick="return confirm('Supprimer cette dépense ?')">×</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="empty">Aucune dépense enregistrée.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bouton Reset -->
+    <div class="reset-container">
+        <form method="POST" action="{{ url_for('reset') }}" onsubmit="return confirm('Êtes-vous sûr de vouloir réinitialiser toutes les données ?');">
+            <button type="submit" class="btn-reset">Réinitialiser</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

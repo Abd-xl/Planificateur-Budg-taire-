@@ -1,0 +1,483 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #f5f5f7;
+    --bg-card: #ffffff;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --accent-positive: #34c759;
+    --accent-negative: #ff3b30;
+    --border-color: #d2d2d7;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    --radius: 12px;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    padding: 0;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+}
+
+/* Messages Flash */
+.messages {
+    margin-bottom: 16px;
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    border: 1px solid;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-color: #c8e6c9;
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border-color: #ffcdd2;
+}
+
+.alert-info {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border-color: #bbdefb;
+}
+
+/* Carte Solde */
+.solde-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.solde-card h2 {
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.solde {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -1px;
+}
+
+.solde.positive {
+    color: var(--accent-positive);
+}
+
+.solde.negative {
+    color: var(--accent-negative);
+}
+
+/* Statistiques */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.stat-value.income {
+    color: var(--accent-positive);
+}
+
+.stat-value.depense {
+    color: var(--accent-negative);
+}
+
+/* Formulaires */
+.forms-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.form-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-card input {
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.form-card input:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    background: var(--bg-card);
+}
+
+.form-card input::placeholder {
+    color: var(--text-secondary);
+}
+
+.btn-income, .btn-depense {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+
+.btn-income {
+    background: var(--accent-positive);
+}
+
+.btn-depense {
+    background: var(--accent-negative);
+}
+
+.btn-income:hover, .btn-depense:hover {
+    opacity: 0.9;
+}
+
+.btn-income:active, .btn-depense:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+}
+
+/* Historiques */
+.historiques-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.historique-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.historique-card h3 {
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.historique-list {
+    list-style: none;
+    max-height: 450px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.historique-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.historique-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.historique-list::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.historique-list li {
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-primary);
+    border: 1px solid transparent;
+}
+
+.transaction-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.delete-form {
+    margin: 0;
+}
+
+.btn-delete {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: var(--text-secondary);
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-weight: 300;
+}
+
+.btn-delete:hover {
+    background-color: rgba(255, 59, 48, 0.1);
+    color: var(--accent-negative);
+}
+
+.btn-delete:active {
+    transform: scale(0.95);
+}
+
+.income-item {
+    border-left: 3px solid var(--accent-positive);
+}
+
+.depense-item {
+    border-left: 3px solid var(--accent-negative);
+}
+
+.date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    min-width: 90px;
+    font-variant-numeric: tabular-nums;
+}
+
+.montant {
+    font-weight: 600;
+    font-size: 1rem;
+    min-width: 90px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.montant.income {
+    color: var(--accent-positive);
+}
+
+.montant.depense {
+    color: var(--accent-negative);
+}
+
+.label {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 32px 20px;
+    font-size: 0.9rem;
+}
+
+/* Bouton Reset */
+.reset-container {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.btn-reset {
+    padding: 10px 24px;
+    background-color: var(--bg-card);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-reset:hover {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+.btn-reset:active {
+    transform: scale(0.97);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+
+    header {
+        padding-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .solde {
+        font-size: 2rem;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .forms-container,
+    .historiques-container {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction-info {
+        flex-wrap: wrap;
+    }
+
+    .date {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .montant {
+        min-width: auto;
+    }
+
+    .label {
+        width: 100%;
+    }
+}
+
+/* iOS Safari fixes */
+@supports (-webkit-touch-callout: none) {
+    input {
+        font-size: 16px; /* Prevents zoom on focus */
+    }
+
+    .btn-income, .btn-depense, .btn-reset, .btn-delete {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #000000;
+        --bg-card: #1c1c1e;
+        --text-primary: #ffffff;
+        --text-secondary: #8e8e93;
+        --border-color: #38383a;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    }
+
+    .form-card input {
+        background: #000000;
+    }
+
+    .form-card input:focus {
+        background: var(--bg-card);
+    }
+
+    .historique-list li {
+        background: #000000;
+    }
+}
