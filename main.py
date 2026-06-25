@@ -1,9 +1,6 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from gestion import BudgetManager
-from dotenv import load_dotenv
-import os
-
-load_dotenv('KEY.env')
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'cle_secrete_de_dev')
