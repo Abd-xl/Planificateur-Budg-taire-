@@ -20,7 +20,7 @@ class BudgetManager:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
     def _get_default_data(self):
-        return {'income': [], 'depense': [], 'solde': 0}
+        return {'income': [], 'depense': [], 'emprunts': [], 'solde': 0}
 
     def valider_texte(self, texte):
         if not texte or not texte.strip():
@@ -97,6 +97,11 @@ class BudgetManager:
 
         data = self.load_data()
         return data['depense']
+    
+    def get_emprunt_list(self):
+
+        data = self.load_data()
+        return data['emprunts']
 
     def get_statistiques(self):
 
@@ -104,12 +109,15 @@ class BudgetManager:
 
         total_income = sum(item['montant'] for item in data['income'])
         total_depense = sum(item['montant'] for item in data['depense'])
+        total_emprunts = sum(item['montant'] for item in data['emprunts'])
 
         return {
             'total_income': total_income,
             'total_depense': total_depense,
+            'total_emprunts': total_emprunts,
             'nombre_revenus': len(data['income']),
             'nombre_depenses': len(data['depense']),
+            'nombre_emprunts': len(data['emprunts']),
             'solde': data['solde']
         }
 
@@ -122,7 +130,7 @@ class BudgetManager:
 
         data = self.load_data()
 
-        if type_transaction not in ['income', 'depense']:
+        if type_transaction not in ['income', 'depense', 'emprunts']:
             return False, "Type de transaction invalide"
 
         if index < 0 or index >= len(data[type_transaction]):
@@ -133,6 +141,8 @@ class BudgetManager:
 
         if type_transaction == 'income':
             data['solde'] -= montant
+        elif type_transaction == 'emprunts':
+            data['solde'] -= montant
         else:
             data['solde'] += montant
 
@@ -141,3 +151,28 @@ class BudgetManager:
         self.save_data(data)
 
         return True, f"Transaction de {montant:.0f} Fcfa supprimée!"
+    
+    def ajouter_emprunt(self, montant, source):
+        if not self.valider_montant(montant):
+            return False, "Montant invalide. Doit être un nombre positif."
+
+        if not self.valider_texte(source):
+            return False, "Source invalide. Pas de caractères spéciaux."
+
+        data = self.load_data()
+
+        emprunt = {
+            "montant": float(montant),
+            "source": source.strip(),
+            "date": datetime.now().strftime("%d/%m/%Y %H:%M")
+        }
+
+        if 'emprunts' not in data:
+            data['emprunts'] = []
+
+        data['emprunts'].append(emprunt)
+        data['solde'] += emprunt['montant']
+
+        self.save_data(data)
+
+        return True, f"Emprunt de {emprunt['montant']:.0f} Fcfa ajouté avec succès!"
